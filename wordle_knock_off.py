@@ -13,7 +13,7 @@ from word_data import five_dict, six_dict
 def wordle():
     welcome()
     
-
+#test
 
 def string_to_list(word): #this makes a list of the word's letters
     list_of_letters = []
