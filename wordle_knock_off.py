@@ -14,6 +14,7 @@ def wordle():
     welcome()
     
 #test
+#test 2
 
 def string_to_list(word): #this makes a list of the word's letters
     list_of_letters = []
