@@ -79,10 +79,10 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
 
         if guess != None: #letters in the correct position will be capitalized to show that the word is in the correct position
             for wrong_guess in guess_list:
-                correct_position_index = len(correct_position) - 1
+                correct_position_index = len(correct_position) - 1 #these lines i believe is bad coding since we don't need to code to run this for every word
                 while correct_position_index != -1:
-                    letter_index = len(wrong_guess) - 1
-                    while letter_index != -1:
+                    letter_index = len(wrong_guess) - 1 #refer to line 82 comments
+                    while letter_index != -1: #checks which letter for guess aligns with letter from the correct word and capatilizes that word
                         if wrong_guess[letter_index] == correct_position[correct_position_index]:
                             wrong_guess = wrong_guess[:letter_index] + wrong_guess[letter_index].upper() + wrong_guess[letter_index + 1:]
                         letter_index -= 1
@@ -172,6 +172,11 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
 #correctly positioned letters in prior guesses should not also change into captial letter once letter is guess correctly in current guess
 # make incorrect letter list in order
 
+#few ideas to improve code
+#changing from a list that seperates works to a dictionary that has the keys as letters and the values should be a list that has the index of that letter (this is to make it possible for letters to be used multiple times)
+#for the idea above - the dictorary only has to apply to the correct word (current list process can still be kept for the guessing word)   
+#steps 
+#
 
 wordle()
 
