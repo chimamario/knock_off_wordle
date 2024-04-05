@@ -33,14 +33,15 @@ def no_duplicates(list): #this looks for duplicates within the 'string_to_list' 
             seen.append(letter)
     return seen
 
-def duplicates(word):
+def duplicates(word): #creates dictionary with keys that are the words letters and the values are the indexs of the letter (helpful if the word has mulitiple occurances)
     position_of_letter = string_to_list(word)
-    seen = no_duplicates(position_of_letter)
     list_dict = {}
 
     list_dict = {letter: [] for letter in set(position_of_letter)}
     for index, letter in enumerate(position_of_letter):
         list_dict[letter].append(index)
+    
+    return list_dict
 
 
 

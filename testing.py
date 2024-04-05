@@ -43,3 +43,5 @@ def duplicates(word):
     return list_dict
 
 print(duplicates(word))
+
+#results {'i': [4], 'g': [6], 'p': [0, 3], 'n': [5], 'o': [1, 2]}
