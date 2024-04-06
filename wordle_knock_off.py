@@ -195,4 +195,4 @@ wordle()
 
 #new ideas
 #notice that if a letter is in the correct position but is also used again in the wrong posistion, then the second attempt of letter should be added to the incorrect letter (IF THERE IS NO MORE POSITIONS WHERE IT WOULD BE CORRECT)
-#
+#deal with captital mis inputs (or allow capitals)
