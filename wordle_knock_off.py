@@ -68,9 +68,9 @@ def start_game(word_list): # This small method acknowledges the length of word s
     print("\nYou have selected a {}-worded wordle round.".format(str(len(word_list[0]))))
     real_word = str(random.choice(word_list))
     # print(real_word)
-    guessing_game(real_word, None, None, [], [], [], [], [])
+    guessing_game(real_word, None, None, [], [], {}, {}, {} ,[])
 
-def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position,correct_letter_wrong_position, guess_list = []):
+def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position_dict, incorrect_position_dict, incorrect_letter_dict,guess_list = []):
    
 
     if num_of_attempts_left == 0: #when user runs out of attempts the game will show correct word and end the game
@@ -83,34 +83,52 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
     
     
     if guess != None: #works
-        print("____________________")
-        print("\nNumber of attempts left: {}".format(num_of_attempts_left))
-        print("\nYou had guessed the word: {}".format(guess))
-        print("____________________")
-        print("\n")
+        # print("____________________")
+        # print("\nNumber of attempts left: {}".format(num_of_attempts_left))
+        # print("\nYou had guessed the word: {}".format(guess))
+        # print("____________________")
+        # print("\n")
 
         if guess != None: #letters in the correct position will be capitalized to show that the word is in the correct position
-            for wrong_guess in guess_list:
-                correct_position_index = len(correct_position) - 1 #these lines i believe is bad coding since we don't need to code to run this for every word
-                while correct_position_index != -1:
-                    letter_index = len(wrong_guess) - 1 #refer to line 82 comments
-                    while letter_index != -1: #checks which letter for guess aligns with letter from the correct word and capatilizes that word
-                        if wrong_guess[letter_index] == correct_position[correct_position_index]:
-                            wrong_guess = wrong_guess[:letter_index] + wrong_guess[letter_index].upper() + wrong_guess[letter_index + 1:]
-                        letter_index -= 1
-                    correct_position_index -= 1     
-                print(wrong_guess)
-        print("NOTE: if letter is in the correct position, letter will be CAPITALIZED")
-        # print("\nCorrectly Positioned Letters: {}".format(correct_position))
-        # print("Correct Letters in Guess (Might not be correct position): {}".format(correct_letters))
-        print("Correct letters, Wrong Position: {}".format(correct_letter_wrong_position))
+            merge_letter_dict = {letter: correct_position_dict.get(letter, []) 
+                     + incorrect_position_dict.get(letter, []) + 
+                     incorrect_letter_dict.get(letter, []) 
+                     for letter in set(correct_position_dict) | set(incorrect_letter_dict) | set(incorrect_letter_dict) }
+
+            max_index = len(guess)
+
+            wrong_guess = [''] * (max_index + 1)
+
+            for letter, list in merge_letter_dict.items():
+                for index in list:
+                    wrong_guess[index] = letter.upper() if letter in correct_position_dict and index in correct_position_dict[letter] else letter.lower()
+
+            result = ''.join(wrong_guess)
+        print('\n \n \n \n \n \n\n \n \n')
+        print("____________________")
+        print("\nNumber of attempts left: {}".format(num_of_attempts_left))
+        print("NOTE: if letter is in the correct position, letter will be CAPITALIZED\n")
+    
+        incorrect_position_list = []
+        for letter, list in incorrect_position_dict.items():
+            if list == []:
+                continue
+            else:
+                incorrect_position_list.append(letter)
+
+        guess_list.append(result)
+        for guess in guess_list:
+            print(guess)
+        print('\n')
+        print("Correct letters, Wrong Position: {}".format(incorrect_position_list))
         print("Incorrect Letters in Guess: {}".format(incorrect_letters))
 
    
     correct_letters = [] #these list reset every attempt. 
-    # incorrect_letters = [] 
-    correct_position = []
-    correct_letter_wrong_position = []
+    incorrect_letters = []
+    correct_position_dict = {}
+    incorrect_position_dict = {}
+    incorrect_letter_dict = {}
 
     if num_of_attempts_left == None: #works
         num_of_attempts_left = 6    
@@ -118,14 +136,17 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
     proper_guess = False
     while proper_guess == False:
         print("____________________")
-        print("\nInput should have no captial letters\nNOTE: letter can only be used once")
+        print("\nInput should have no captial letters")
         guess = input("\nGuess a {}-lettered word\nInput: ".format(str(len(correct_word))))
         
 
-        list = string_to_list(guess)
-        list_of_letters = no_duplicates(list)
-        correct__hidden = string_to_list(correct_word)
-        correct_letters_hidden = no_duplicates(correct__hidden)
+        guess_dict = duplicates(guess)
+        correct_dict = duplicates(correct_word)
+
+        # list = string_to_list(guess)
+        # list_of_letters = no_duplicates(list)
+        # correct__hidden = string_to_list(correct_word)
+        # correct_letters_hidden = no_duplicates(correct__hidden)
 
         # if len(guess) == len(correct_word): #we want to end loop after this guess #dont know if it works
         #     proper_guess = True 
@@ -148,36 +169,35 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
 
         elif guess != correct_word:
             proper_guess = True
-            guess_index = len(correct_word) - 1
-            while guess_index != -1:
-                word_index = len(correct_word) - 1
-                while word_index != -1: #we need to for list of letter first and them make our lists
 
-                    if guess[guess_index] == correct_word[word_index]: #guess_index is stagnant in this while loop. it will be seeing a lot of different 'word_index'
-                        if guess_index == word_index: #this is to see if the matching letting have the same positioning
-                            if guess[guess_index] not in correct_position: #removes potential duplicates
-                                correct_position.append(guess[guess_index]) 
-                            if guess[guess_index] not in correct_letters: #removes duplicates
-                                correct_letters.append(guess[guess_index])
-                        if guess_index != word_index: #the letter matches but isnt in the same position
-                            if guess[guess_index] not in correct_letters:
-                                correct_letters.append(guess[guess_index])
+            for letter, index_list in correct_dict.items():
+                correct_position_dict[letter] = []
+
+            for letter, index_list in guess_dict.items():
+                incorrect_position_dict[letter] = []
+                incorrect_letter_dict[letter] = []
+
+            for letter, index_list in guess_dict.items():
                 
-                    if guess[guess_index] != correct_word[word_index]: # at this point, the correct letters and correct positions lists have been filled.
-                        if guess[guess_index] not in correct_letters_hidden:
-                            if guess[guess_index] not in incorrect_letters:
-                                incorrect_letters.append(guess[guess_index])
-                        
-                    word_index -= 1
-                guess_index -= 1
-            
-    correct_letter_wrong_position = []
-    for letter in correct_letters:
-        if letter not in correct_position:
-            correct_letter_wrong_position.append(letter)
+
+                if letter not in correct_dict.keys():
+                    incorrect_letters.append(letter)
+                    for index in index_list:
+                        incorrect_letter_dict[letter].append(index)
+                
+
+                if letter in correct_dict.keys():
+                    correct_letters.append(letter)
+                    for index in index_list:
+                        if index in correct_dict[letter]:
+                            correct_position_dict[letter].append(index)
+                        if index not in correct_dict[letter]:
+                            incorrect_position_dict[letter].append(index)
+
     num_of_attempts_left -= 1
-    guess_list.append(guess) 
-    guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position, correct_letter_wrong_position, guess_list,)
+    
+
+    guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position_dict, incorrect_position_dict,incorrect_letter_dict ,guess_list,)
     
 
 # make it possible to use letter mulitple times in guess
