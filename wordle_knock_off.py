@@ -5,23 +5,15 @@ import random
 import string
 from word_data import five_dict, six_dict
 
-# correct_letters = []
-# incorrect_letters = [] 
-# correct_position = []
-
 
 def wordle():
     welcome()
     
-#test
-#test 2
 
 def string_to_list(word): #this makes a list of the word's letters
     list_of_letters = []
-    # list_of_letters[:0] = word
     for letter in word:
         list_of_letters.append(letter)
-    
     return list_of_letters
 
 def no_duplicates(list): #this looks for duplicates within the 'string_to_list' list and removes them
@@ -53,20 +45,19 @@ def welcome(): #lets user pick how long they want the word
 
         if five_or_six == 5:
             correct_ans = True
-            start_game(five_dict)
+            start_game(five_dict,five_or_six)
             
         elif five_or_six == 6:
             correct_ans = True 
-            start_game(six_dict)      
+            start_game(six_dict,five_or_six)      
             
         else:
             print("Invalid option, Please Try again")
 
-def start_game(word_list): # This small method acknowledges the length of word selected and pick a random word
+def start_game(word_list, five_or_six): # This small method acknowledges the length of word selected and pick a random word
     print("____________________")
-    print("\nYou have selected a {}-worded wordle round.".format(str(len(word_list[0]))))
+    print(f"\nYou have selected a {five_or_six}-worded wordle round.")
     real_word = str(random.choice(word_list))
-    # print(real_word)
     guessing_game(real_word, None, None, [], [], {}, {}, {} ,[])
 
 def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position_dict, incorrect_position_dict, incorrect_letter_dict, correct_dict,guess_list = []):
@@ -140,12 +131,13 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
     proper_guess = False
     while proper_guess == False:
         print("____________________")
-        print("\nInput should have no captial letters")
-        guess = input("\nGuess a {}-lettered word\nInput: ".format(str(len(correct_word))))
+        guess = input("\nGuess a {}-lettered word. (Note: Input should have no captial letters) \nInput: ".format(str(len(correct_word))))
         
 
         guess_dict = duplicates(guess) #these functions creates a dictionary where the letter of the word is the key and the index where the letter is placed is the values
         correct_dict = duplicates(correct_word)
+
+
 
         if len(guess) != len(correct_word): #WORKS
             print("____________________")
@@ -161,8 +153,12 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
             print("____________________")
             print("\nGuess has already been attempted. Please Try again")
             proper_guess = False
+        
+        # 
 
         elif guess != correct_word:
+
+
             proper_guess = True
 
             for letter, index_list in correct_dict.items(): #setting up a dictionary (letter: ['index_1', 'index_2',....]). guesses with the correct index values will be added to its letters dict list
@@ -194,9 +190,9 @@ def guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, in
     guessing_game(correct_word, guess, num_of_attempts_left, correct_letters, incorrect_letters, correct_position_dict, incorrect_position_dict,incorrect_letter_dict, correct_dict,guess_list,)
     
 
-#new actions
-#add multiple words (25 for each 5 and 6 lettered words)
-#merge changes to main repository
 
 wordle()
 
+#new ideas
+#notice that if a letter is in the correct position but is also used again in the wrong posistion, then the second attempt of letter should be added to the incorrect letter (IF THERE IS NO MORE POSITIONS WHERE IT WOULD BE CORRECT)
+#
